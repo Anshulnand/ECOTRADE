@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { FiArrowUp } from "react-icons/fi";
+import { useLocation } from "react-router-dom";
 import "./ScrollToTopButton.css";
 
 const ScrollToTopButton = () => {
   const [visible, setVisible] = useState(false);
+  const { pathname } = useLocation(); // Get current route
+
+  // Reset visibility when route changes
+  useEffect(() => {
+    setVisible(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pathname]);
 
   // Show button when user scrolls down
   useEffect(() => {

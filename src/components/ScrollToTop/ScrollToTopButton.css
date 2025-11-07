@@ -23,18 +23,3 @@
 }
 
 /* 🧩 Adjust position for smaller screens */
-@media (max-width: 768px) {
-  .scroll-to-top {
-    bottom: 90px; /* move it a bit higher */
-    right: 20px;  /* slightly closer to center */
-  }
-}
-
-@media (max-width: 480px) {
-  .scroll-to-top {
-    bottom: 100px; /* even higher for mobile */
-    right: 15px;
-    width: 45px;
-    height: 45px;
-  }
-}

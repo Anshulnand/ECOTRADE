@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Verify from './pages/Verify/Verify'
 import AboutUs from './pages/AboutUs/AboutUs'
 import ContactUs from './pages/ContactUs/ContactUs'
+import ScrollToTopButton from './components/ScrollToTop/ScrollToTopButton'
 
 const App = () => {
 
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/ContactUs" element={<ContactUs />} />
         </Routes>
+        <ScrollToTopButton />
       </div>
       <Footer />                                                 
     </>

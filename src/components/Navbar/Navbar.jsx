@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../../Context/StoreContext'
 import { FiSearch, FiShoppingCart, FiUser, FiLogOut } from 'react-icons/fi';
 import { FaBoxOpen } from 'react-icons/fa';
+
 const Navbar = ({ setShowLogin }) => {
 
   const [menu, setMenu] = useState("home");
@@ -26,13 +27,13 @@ const Navbar = ({ setShowLogin }) => {
 
       <ul className="navbar-menu">
         <Link to="/" onClick={() => setMenu("home")} className={`${menu === "home" ? "active" : ""}`}>Home</Link>
-         <Link
+         {/* <Link
           to="/#explore-menu"
           onClick={() => setMenu("menu")}
           className={`${menu === "menu" ? "active" : ""}`}
         >
           Healthy Pantry
-        </Link>
+        </Link> */}
         {/* <a href='#app-download' onClick={() => setMenu("mob-app")} className={`${menu === "mob-app" ? "active" : ""}`}>mobile app</a> */}
         <a href='#footer' onClick={() => setMenu("contact")} className={`${menu === "contact" ? "active" : ""}`}>Get in Touch</a>
 

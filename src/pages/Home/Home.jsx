@@ -24,6 +24,9 @@ const Home = () => {
       <FoodDisplay category={category} />                          
       {/* <AppDownload/> */}
       <BestFeatures />
+
+      
+      {/* scroll to move up */}
             <ScrollToTopButton />
       {totalAmount > 0 && (
           <Link to="/cart" className="floating-cart-total">
