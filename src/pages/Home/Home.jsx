@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import "./Home.css"
+import { Link } from "react-router-dom"; 
 import { StoreContext } from "../../Context/StoreContext";
 import Header from "../../components/Header/Header";
 import ExploreMenu from "../../components/ExploreMenu/ExploreMenu";
@@ -7,7 +8,7 @@ import FoodDisplay from "../../components/FoodDisplay/FoodDisplay";
 import BestFeatures from "../../components/BestFeatures/BestFeatures";
 import ServiceImages from "../../components/ServiceImages/ServiceImages";
 import { ShoppingCart } from "lucide-react";
-
+import ScrollToTopButton from "../../components/ScrollToTop/ScrollToTopButton";
 const Home = () => {
   const { getTotalCartAmount, currency } = useContext(StoreContext);
  
@@ -23,12 +24,13 @@ const Home = () => {
       <FoodDisplay category={category} />                          
       {/* <AppDownload/> */}
       <BestFeatures />
-      
+            <ScrollToTopButton />
       {totalAmount > 0 && (
-        <div className="floating-cart-total">
+          <Link to="/cart" className="floating-cart-total">
+        
           <ShoppingCart className="cart-icon" />
           <span>Total: {currency}{totalAmount}</span>
-        </div>
+        </Link>
       )}
       
       <div className="AmazonPage-container">

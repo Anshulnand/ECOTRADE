@@ -76,7 +76,7 @@ const Footer = () => {
 
       {/* Copyright */}
       <p className="footer-copyright">
-        © {new Date().getFullYear()} All rights reserved | Made with ❤️ by{" "}
+        © {new Date().getFullYear()} 
         <a
           href="https://kharaagrotech.com"
           target="_blank"

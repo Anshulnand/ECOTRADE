@@ -27,19 +27,38 @@ background: rgb(47, 47, 47);
 
 .floating-cart-total {
   position: fixed;
-  bottom: 20px;
-  right: 25px;
+  bottom: 30px;
+  right: 100px;
   background: linear-gradient(to right, #3baf21, #1f971f);
   color: white;
   font-weight: 600;
   font-size: 16px;
   padding: 10px 18px;
   border-radius: 30px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   gap: 8px;
   z-index: 1000;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* 🌿 Hover effect */
+.floating-cart-total:hover {
+  transform: scale(1.07);
+  background: linear-gradient(to right, #1f971f, #3baf21);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+
+@media (max-width: 768px) {
+  .floating-cart-total
+  {
+     position: fixed;
+   bottom: 30px;
+ right: 25px;
+  }
 }
 
 .floating-cart-total .cart-icon {
