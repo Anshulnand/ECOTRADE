@@ -1,6 +1,7 @@
 // ContactUs.jsx
 import React, { useState, useEffect } from "react";
 import { MapPin, Phone, Mail, Clock, Send, AlertCircle } from "lucide-react";
+import emailjs from "emailjs-com"; // ✅ Import EmailJS
 import "./ContactUs.css";
 
 const ContactUs = () => {
@@ -47,8 +48,21 @@ const ContactUs = () => {
     setFormState((prev) => ({ ...prev, isSubmitting: true, errors: {} }));
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // ✅ Replace simulation with actual EmailJS sending
+      await emailjs.send(
+        "service_hay9zb9", // 🔹 service id
+        "template_tjhniru", // 🔹 template id
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+            time: new Date().toLocaleString(),
+        },
+        "6Y2ehsJLYr8iwEdWK" // 🔹 Replace this
+      );
+
       setFormState((prev) => ({ ...prev, isSubmitted: true }));
       setFormData({
         name: "",
@@ -58,9 +72,10 @@ const ContactUs = () => {
         message: "",
       });
     } catch (error) {
+      console.error("EmailJS Error:", error);
       setFormState((prev) => ({
         ...prev,
-        errors: { submit: "Failed to submit form. Please try again." },
+        errors: { submit: "Failed to send message. Please try again." },
       }));
     } finally {
       setFormState((prev) => ({ ...prev, isSubmitting: false }));
@@ -73,7 +88,6 @@ const ContactUs = () => {
       ...prev,
       [name]: value,
     }));
-    // Clear errors when user starts typing
     if (formState.errors[name]) {
       setFormState((prev) => ({
         ...prev,
@@ -87,13 +101,10 @@ const ContactUs = () => {
       {/* Hero Banner */}
       <div className="contact-banner">
         <div className="banner-overlay"></div>
-        <div className="banner-content">
-          {/* <h1>Get in Touch</h1>
-          <p>We're here to help and answer any question you might have</p> */}
-        </div>
+        <div className="banner-content"></div>
       </div>
 
-      {/* Contact Info Cards */}
+      {/* Contact Info */}
       <div className="contact-info-container">
         {[
           {
@@ -133,7 +144,7 @@ const ContactUs = () => {
         ))}
       </div>
 
-      {/* Contact Form Section */}
+      {/* Contact Form */}
       <div className="contact-form-container">
         <div className="form-content">
           <div className="form-header">
@@ -279,7 +290,7 @@ const ContactUs = () => {
           )}
         </div>
 
-        {/* Map Section */}
+        {/* Map */}
         <div className="map-container">
           <iframe
             className="map-frame"
