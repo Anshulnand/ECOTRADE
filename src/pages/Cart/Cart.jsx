@@ -1,92 +1,104 @@
-import React, { useContext } from 'react';
-import './Cart.css';
-import { StoreContext } from '../../Context/StoreContext';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext } from "react";
+import "./Cart.css";
+import { StoreContext } from "../../Context/StoreContext";
+import { useNavigate } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 
 const Cart = () => {
   const {
     cartItems,
-    food_list = [], // fallback to empty array
+    food_list = [],
     removeFromCart,
     getTotalCartAmount,
     url,
     currency,
-    deliveryCharge
+    deliveryCharge,
   } = useContext(StoreContext);
 
   const navigate = useNavigate();
 
   return (
-    <div className='cart'>
+    <div className="cart">
+      <h1 className="cart-heading">Your Shopping Cart 🛒</h1>
+
       <div className="cart-items">
         <div className="cart-items-title">
-          <p>Items</p>
-          <p>Title</p>
+          <p>Item</p>
+          <p>Name</p>
           <p>Price</p>
-          <p>Quantity</p>
+          <p>Qty</p>
           <p>Total</p>
           <p>Remove</p>
         </div>
-        <br />
         <hr />
 
-        {Array.isArray(food_list) && food_list.length > 0 ? (
-          food_list.map((item, index) => {
-            if (cartItems[item._id] > 0) {
-              return (
-                <div key={index}>
-                  <div className="cart-items-title cart-items-item">
-                    <img src={`${url}/images/${item.image}`} alt={item.name} />
-                    <p>{item.name}</p>
-                    <p>{currency}{item.price}</p>
-                    <div>{cartItems[item._id]}</div>
-                    <p>{currency}{item.price * cartItems[item._id]}</p>
-                    <p className='cart-items-remove-icon' onClick={() => removeFromCart(item._id)}>x</p>
-                  </div>
-                  <hr />
-                </div>
-              );
-            } else {
-              return null;
-            }
-          })
+        {food_list.some((item) => cartItems[item._id] > 0) ? (
+          food_list.map((item, index) =>
+            cartItems[item._id] > 0 ? (
+              <div key={index} className="cart-item-row">
+                <img
+                  className="cart-item-image"
+                  src={`${url}/images/${item.image}`}
+                  alt={item.name}
+                />
+                <p className="cart-item-name">{item.name}</p>
+                <p>{currency}{item.price}</p>
+                <p>{cartItems[item._id]}</p>
+                <p className="cart-item-total">
+                  {currency}
+                  {item.price * cartItems[item._id]}
+                </p>
+                <Trash2
+                  className="cart-remove-icon"
+                  onClick={() => removeFromCart(item._id)}
+                />
+              </div>
+            ) : null
+          )
         ) : (
-          <p className="cart-loading">Loading cart items...</p>
+          <p className="cart-empty">Your cart is empty 🛍️</p>
         )}
       </div>
 
-      <div className="cart-bottom">
-        <div className="cart-total">
-          <h2>Cart Totals</h2>
-          <div>
+      {getTotalCartAmount() > 0 && (
+        <div className="cart-bottom">
+          <div className="cart-total">
+            <h2>Cart Summary</h2>
             <div className="cart-total-details">
               <p>Subtotal</p>
               <p>{currency}{getTotalCartAmount()}</p>
             </div>
-            <hr />
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>{currency}{getTotalCartAmount() === 0 ? 0 : deliveryCharge}</p>
+              <p>
+                {currency}
+                {getTotalCartAmount() === 0 ? 0 : deliveryCharge}
+              </p>
             </div>
-            <hr />
-            <div className="cart-total-details">
+            <div className="cart-total-details total-highlight">
               <b>Total</b>
-              <b>{currency}{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + deliveryCharge}</b>
+              <b>
+                {currency}
+                {getTotalCartAmount() + deliveryCharge}
+              </b>
             </div>
+            <button
+              className="checkout-btn"
+              onClick={() => navigate("/order")}
+            >
+              Proceed to Checkout
+            </button>
           </div>
-          <button onClick={() => navigate('/order')}>PROCEED TO CHECKOUT</button>
-        </div>
 
-        <div className="cart-promocode">
-          <div>
-            <p>If you have a promo code, enter it here</p>
-            <div className='cart-promocode-input'>
-              <input type="text" placeholder='Promo code' />
-              <button>Submit</button>
+          <div className="cart-promocode">
+            <p>🎁 Have a promo code?</p>
+            <div className="cart-promocode-input">
+              <input type="text" placeholder="Enter promo code" />
+              <button>Apply</button>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
