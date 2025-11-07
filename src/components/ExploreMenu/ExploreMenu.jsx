@@ -23,7 +23,7 @@ const ExploreMenu = ({ category, setCategory }) => {
           Choose from a diverse menu featuring a delectable array of dishes. Our
           mission is to satisfy your cravings and elevate your dining
           experience, one delicious meal at a time.
-        </p>
+        </p>                                                                        
       </div>
       <div className="explore-menu-list">
         {menu_list.map((item, index) => {
@@ -39,7 +39,7 @@ const ExploreMenu = ({ category, setCategory }) => {
             >
               <img
                 src={item.menu_image}
-                className={category === item.menu_name ? "active" : ""}
+                className= {category === item.menu_name ? "active" : ""}
                 alt=""
               />
               <p>{item.menu_name}</p>

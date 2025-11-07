@@ -42,14 +42,29 @@
     gap: 40px;
 }
 
-.navbar-search-icon{
-position: relative;
+.navbar-icon {
+  color: #333;
+  cursor: pointer;
+  transition: all 0.1s ease;
 }
 
+.navbar-icon:hover {
+  color: #e85b1a; 
+}
+
+.navbar-profile-dropdown li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navbar-profile-dropdown li p {
+  margin: 0;
+}
 .navbar-search-icon .dot{
     position: absolute;
-    min-width: 10px;
-    min-height: 10px;
+    min-width: 20px;
+    min-height: 20px;
     background-color: #FF4C24;
     border-radius: 5px;
     top: -8px;

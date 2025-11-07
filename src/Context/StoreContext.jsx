@@ -5,9 +5,9 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
 
-    const url = import.meta.env.VITE_API_KEY;
+    // const url = import.meta.env.VITE_API_KEY;
 
-    // const url = "http://localhost:4000"
+    const url = "http://localhost:4000"
     const [food_list, setFoodList] = useState([]);
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState("")
@@ -25,7 +25,7 @@ const StoreContextProvider = (props) => {
             await axios.post(url + "/api/cart/add", { itemId }, { headers: { token } });
         }
     }
-
+        
     const removeFromCart = async (itemId) => {
         setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }))
         if (token) {

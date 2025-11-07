@@ -3,7 +3,8 @@ import './Navbar.css'
 import { assets } from '../../assets/assets'
 import { Link, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../../Context/StoreContext'
-
+import { FiSearch, FiShoppingCart, FiUser, FiLogOut } from 'react-icons/fi';
+import { FaBoxOpen } from 'react-icons/fa';
 const Navbar = ({ setShowLogin }) => {
 
   const [menu, setMenu] = useState("home");
@@ -25,7 +26,13 @@ const Navbar = ({ setShowLogin }) => {
 
       <ul className="navbar-menu">
         <Link to="/" onClick={() => setMenu("home")} className={`${menu === "home" ? "active" : ""}`}>Home</Link>
-        <a href='#explore-menu' onClick={() => setMenu("menu")} className={`${menu === "menu" ? "active" : ""}`}>Healthy Pantry</a>
+         <Link
+          to="/#explore-menu"
+          onClick={() => setMenu("menu")}
+          className={`${menu === "menu" ? "active" : ""}`}
+        >
+          Healthy Pantry
+        </Link>
         {/* <a href='#app-download' onClick={() => setMenu("mob-app")} className={`${menu === "mob-app" ? "active" : ""}`}>mobile app</a> */}
         <a href='#footer' onClick={() => setMenu("contact")} className={`${menu === "contact" ? "active" : ""}`}>Get in Touch</a>
 
@@ -39,23 +46,35 @@ const Navbar = ({ setShowLogin }) => {
 
       </ul>
       <div className="navbar-right">
-        <img src={assets.search_icon} alt="" />
-        <Link to='/cart' className='navbar-search-icon'>
-          <img src={assets.basket_icon} alt="" />
-          <div className={getTotalCartAmount() > 0 ? "dot" : ""}></div>
-        </Link>
-        {!token ? <button onClick={() => setShowLogin(true)}>sign in</button>
-          : <div className='navbar-profile'>
-            <img src={assets.profile_icon} alt="" />
-            <ul className='navbar-profile-dropdown'>
-              <li onClick={()=>navigate('/myorders')}> <img src={assets.bag_icon} alt="" /> <p>Orders</p></li>
-              <hr />
-              <li onClick={logout}> <img src={assets.logout_icon} alt="" /> <p>Logout</p></li> 
-            </ul>
-          </div>
-        }
+      {/* 🔍 Search Icon */}
+      <FiSearch className="navbar-icon" size={25} />
 
-      </div>
+      {/* 🛒 Cart Icon */}
+      <Link to="/cart" className="navbar-search-icon">
+        <FiShoppingCart className="navbar-icon" size={25} />
+        <div className={getTotalCartAmount() > 0 ? "dot" : ""}></div>
+      </Link>
+
+      {/* 👤 Profile / Login */}
+      {!token ? (
+        <button onClick={() => setShowLogin(true)}>Sign in</button>
+      ) : (
+        <div className="navbar-profile">
+          <FiUser className="navbar-icon" size={25} />
+
+          {/* Dropdown */}
+          <ul className="navbar-profile-dropdown">
+            <li onClick={() => navigate('/myorders')}>
+              <FaBoxOpen size={25} /> <p>Orders</p>
+            </li>
+            <hr />
+            <li onClick={logout}>
+              <FiLogOut size={25} /> <p>Logout</p>
+            </li>
+          </ul>
+        </div>
+      )}
+    </div>
     </div>
   )
 }

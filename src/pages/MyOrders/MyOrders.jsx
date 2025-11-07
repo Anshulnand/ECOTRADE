@@ -13,13 +13,11 @@ const MyOrders = () => {
     const response = await axios.post(url+"/api/order/userorders",{},{headers:{token}});
     setData(response.data.data)
   }
-
   useEffect(()=>{
     if (token) {
       fetchOrders();
     }
   },[token])
-
   return (
     <div className='my-orders'>
       <h2>My Orders</h2>
