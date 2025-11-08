@@ -36,7 +36,7 @@ const Home = () => {
         </Link>
       )}
       
-      <div className="AmazonPage-container">
+      {/* <div className="AmazonPage-container">
         <header className="AmazonPage-header">
           <h1 className="AmazonPage-title">Welcome to Khara Agrotech</h1>
           <p className="AmazonPage-subtitle">
@@ -51,7 +51,7 @@ const Home = () => {
           </button>
           
         </header>
-      </div>
+      </div> */}
 
       
       <ServiceImages />

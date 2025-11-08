@@ -184,3 +184,16 @@
         display: none;
     }
 }
+
+.navbar-message-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.navbar-message-link:hover .navbar-icon {
+  color: #28a745; /* same green theme */
+  transform: scale(1.1);
+}

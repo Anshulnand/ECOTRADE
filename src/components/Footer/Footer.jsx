@@ -83,7 +83,7 @@ const Footer = () => {
           rel="noopener noreferrer"
           className="CopyRightKharaAgroTech"
         >
-          KHARA AGROTECH
+          KHARA AGROTECH                     
         </a>
       </p>
     </footer>

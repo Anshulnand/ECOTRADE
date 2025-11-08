@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 
 const PlaceOrder = () => {
-
     const [payment, setPayment] = useState("cod")
     const [data, setData] = useState({
         firstName: "",
@@ -22,7 +21,6 @@ const PlaceOrder = () => {
     })
 
     const { getTotalCartAmount, token, food_list, cartItems, url, setCartItems,currency,deliveryCharge } = useContext(StoreContext);
-
     const navigate = useNavigate();
 
     const onChangeHandler = (event) => {
@@ -34,51 +32,107 @@ const PlaceOrder = () => {
     const placeOrder = async (e) => {
         e.preventDefault()
         let orderItems = [];
-        food_list.map(((item) => {
+        food_list.forEach(item => {
             if (cartItems[item._id] > 0) {
-                let itemInfo = item;
-                itemInfo["quantity"] = cartItems[item._id];
+                let itemInfo = {...item, quantity: cartItems[item._id]};
                 orderItems.push(itemInfo)
             }
-        }))
+        })
+
         let orderData = {
             address: data,
             items: orderItems,
             amount: getTotalCartAmount() + deliveryCharge,
         }
-        if (payment === "stripe") {
-            let response = await axios.post(url + "/api/order/place", orderData, { headers: { token } });
-            if (response.data.success) {
-                const { session_url } = response.data;
-                window.location.replace(session_url);
-            }
-            else {
-                toast.error("Something Went Wrong")
-            }
-        }
-        else{
-            let response = await axios.post(url + "/api/order/placecod", orderData, { headers: { token } });
-            if (response.data.success) {
-                navigate("/myorders")
-                toast.success(response.data.message)
-                setCartItems({});
-            }
-            else {
-                toast.error("Something Went Wrong")
-            }
-        }
 
+        // Stripe Payment
+        if (payment === "stripe") {
+            try {
+                let response = await axios.post(url + "/api/order/place", orderData, { headers: { token } });
+                if (response.data.success) {
+                    window.location.replace(response.data.session_url);
+                } else {
+                    toast.error("Something Went Wrong");
+                }
+            } catch (err) {
+                toast.error("Stripe Payment Failed");
+            }
+        } 
+
+        // Razorpay Payment
+        else if (payment === "razorpay") {
+            try {
+                // Create Razorpay order on backend
+                let response = await axios.post(url + "/api/order/razorpay", orderData, { headers: { token } });
+                if (!response.data || !response.data.id) {
+                    toast.error("Unable to create Razorpay order");
+                    return;
+                }
+
+                const options = {
+                    key: process.env.REACT_APP_RAZORPAY_KEY, // Razorpay key
+                    amount: response.data.amount,
+                    currency: response.data.currency,
+                    name: "Bhogprada",
+                    description: "Order Payment",
+                    order_id: response.data.id,
+                    handler: async function (res) {
+                        // Verify payment
+                        const verifyRes = await axios.post(url + "/api/order/verify", {
+                            razorpay_order_id: res.razorpay_order_id,
+                            razorpay_payment_id: res.razorpay_payment_id,
+                            razorpay_signature: res.razorpay_signature
+                        }, { headers: { token } });
+
+                        if (verifyRes.data.verified) {
+                            toast.success("Payment Successful!");
+                            setCartItems({});
+                            navigate("/myorders");
+                        } else {
+                            toast.error("Payment verification failed");
+                        }
+                    },
+                    prefill: {
+                        name: `${data.firstName} ${data.lastName}`,
+                        email: data.email,
+                        contact: data.phone
+                    },
+                    theme: { color: "#3399cc" }
+                };
+
+                const rzp = new window.Razorpay(options);
+                rzp.open();
+            } catch (err) {
+                console.log(err);
+                toast.error("Razorpay Payment Failed");
+            }
+        } 
+
+        // Cash on Delivery
+        else {
+            try {
+                let response = await axios.post(url + "/api/order/placecod", orderData, { headers: { token } });
+                if (response.data.success) {
+                    navigate("/myorders");
+                    toast.success(response.data.message);
+                    setCartItems({});
+                } else {
+                    toast.error("Something Went Wrong");
+                }
+            } catch (err) {
+                toast.error("COD Order Failed");
+            }
+        }
     }
 
     useEffect(() => {
         if (!token) {
-            toast.error("to place an order sign in first")
-            navigate('/cart')
+            toast.error("To place an order, sign in first");
+            navigate('/cart');
+        } else if (getTotalCartAmount() === 0) {
+            navigate('/cart');
         }
-        else if (getTotalCartAmount() === 0) {
-            navigate('/cart')
-        }
-    }, [token])
+    }, [token]);
 
     return (
         <form onSubmit={placeOrder} className='place-order'>
@@ -100,6 +154,7 @@ const PlaceOrder = () => {
                 </div>
                 <input type="text" name='phone' onChange={onChangeHandler} value={data.phone} placeholder='Phone' required />
             </div>
+
             <div className="place-order-right">
                 <div className="cart-total">
                     <h2>Cart Totals</h2>
@@ -121,11 +176,17 @@ const PlaceOrder = () => {
                         <img src={payment === "stripe" ? assets.checked : assets.un_checked} alt="" />
                         <p>Stripe ( Credit / Debit )</p>
                     </div>
+                    <div onClick={() => setPayment("razorpay")} className="payment-option">
+                        <img src={payment === "razorpay" ? assets.checked : assets.un_checked} alt="" />
+                        <p>Razorpay ( Credit / Debit / UPI )</p>
+                    </div>
                 </div>
-                <button className='place-order-submit' type='submit'>{payment==="cod"?"Place Order":"Proceed To Payment"}</button>
+                <button className='place-order-submit' type='submit'>
+                    {payment==="cod"?"Place Order":"Proceed To Payment"}
+                </button>
             </div>
         </form>
     )
 }
 
-export default PlaceOrder
+export default PlaceOrder;
